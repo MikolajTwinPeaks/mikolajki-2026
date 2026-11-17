@@ -15,12 +15,23 @@ const now = () => Date.now() + clockOffset;
 // Zaplecze w Google Apps Script (window.GAS_URL w config.js): te same ścieżki, odpowiedzi z polem error zamiast kodów HTTP.
 async function gas(path, body) {
   const a = path.split('/').pop();
+  // Google bywa wolny przy pierwszym wywołaniu albo zawiesza połączenie: limit czasu + ponowienie.
+  // Ponawiamy tylko odczyty; zapis (register/draw) nie jest powtarzany, żeby nie dublować maili.
+  const once = (ms) => {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), ms);
+    const req = body
+      ? fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ a, ...body }), signal: ctl.signal }) // text/plain: bez preflight CORS
+      : fetch(`${window.GAS_URL}?a=${a}&_=${Date.now()}`, { signal: ctl.signal, cache: 'no-store' });
+    return req.finally(() => clearTimeout(timer));
+  };
+  const reads = !body || a === 'mission';
   let r;
-  try {
-    r = body
-      ? await fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ a, ...body }) }) // text/plain: bez preflight CORS
-      : await fetch(`${window.GAS_URL}?a=${a}`);
-  } catch { throw Object.assign(new Error('siec'), { code: 'siec' }); }
+  for (let i = 0; ; i++) {
+    try { r = await once(body ? 30000 : 12000); break; } catch {
+      if (!reads || i >= 2) throw Object.assign(new Error('siec'), { code: 'siec' });
+    }
+  }
   const data = await r.json().catch(() => ({ error: 'siec' }));
   if (data.error) throw Object.assign(new Error(data.error), { code: data.error });
   return data;
