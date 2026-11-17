@@ -2,20 +2,21 @@
 // Jeden plik dla strony i maili. Zmienne: {IMIE} {TERMIN} {START} {TERMIN_LOSOWANIA} {BUDZET} {DATA_WRECZENIA} {ODLICZANIE}
 export const COPY = {
   operacja: 'Operacja: Tajny Mikołaj',
+  nadawca: 'Święty', // nazwa nadawcy w skrzynce (adres zostaje organizatora: „Święty przejął skrzynkę”)
   stopka: 'SunHelp · Mikołajki 2026 · Dobra energia działa także pod przykrywką',
 
   boot: [
     'Nawiązywanie szyfrowanego połączenia…',
     'Weryfikacja sygnatury SunHelp…',
     'Synchronizacja z siecią centrali…',
-    'Kalibracja laserów przy choince…',
+    'Odsuwanie elfów z linii wzroku…',
     'Ładowanie akt agentów…',
     'Kanał bezpieczny.',
   ],
 
   intro: [
-    'Tu centrala SunHelp. Odbiór?',
-    'Centrala kompletuje załogę tajnych Mikołajów.',
+    'Tu „Święty”, tajna służba Świętego Mikołaja. Odbiór?',
+    'Elfy to przykrywka. Szukam prawdziwych agentów.',
     'Działasz z biura czy zdalnie? Misja cię znajdzie.',
   ],
 
@@ -26,10 +27,10 @@ export const COPY = {
     placeholdery: { imie: 'Anna', nazwisko: 'Słoneczna', email: 'anna.sloneczna@sunhelp.pl' },
     przycisk: 'Przyjmuję misję',
     // Proza zamiast punktorów. {LICZNIK} i {AGENCI} podstawia strona na żywo.
-    briefing: 'Zapisy zamykamy za {LICZNIK}. {AGENCI_ZDANIE} {TERMIN_KROTKO} każdy agent dostanie mailem osobisty link do losowania. Prezent do {BUDZET}, pomysłowość bez limitu. Kogo wylosujesz, będziesz wiedzieć tylko ty.',
+    briefing: 'Zapisy zamykam za {LICZNIK}. {AGENCI_ZDANIE} {TERMIN_KROTKO} każdy agent dostanie ode mnie osobisty link do losowania. Prezent do {BUDZET}, pomysłowość bez limitu. Kogo wylosujesz, będziesz wiedzieć tylko ty.',
     zdanie: { a: 'Nazywam się', b: ', mój służbowy adres to', c: '.' },
     redakcja: 'Cel misji:',
-    redakcjaPo: 'odtajnimy {TERMIN_KROTKO}.',
+    redakcjaPo: 'odtajnię {TERMIN_KROTKO}.',
     skanowanie: 'Skanowanie twarzy…',
     potwierdzone: 'Tożsamość potwierdzona.',
   },
@@ -46,7 +47,7 @@ export const COPY = {
 
   wGrze: {
     naglowek: 'Jesteś w grze!',
-    tekst: 'Zgłoszenie dotarło do centrali. Zapisy trwają do {TERMIN}, a losowanie ruszy {START}. Wtedy wyślemy ci osobisty link. Wypatruj wiadomości w służbowej skrzynce.',
+    tekst: 'Mam cię na liście. Zapisy trwają do {TERMIN}, a losowanie ruszy {START}. Wtedy wyślę ci osobisty link. Przyjdzie ze skrzynki Mikołaja z marketingu, ale to ja. On nic nie wie.',
     start: 'Losowanie rusza',
     powrot: 'Wróć do bazy',
   },
@@ -101,61 +102,64 @@ export const COPY = {
   },
 
   mail: {
-    // Zaproszenie do zapisów — wysyła organizator do całej firmy (warianty: _gpt/zaproszenie-gpt.txt, wybór A + zdanie z B).
+    // Legenda (17.11): pisze agent „Święty” z tajnej służby Mikołaja; przejął skrzynkę organizatora, a ten „nic nie wie”.
+    // Wersje robocze: _gpt/swiety-gpt.txt (ChatGPT), redakcja: Claude, akcept: Mikołaj.
     zaproszenie: {
-      temat: 'Mikołajki 2026 w SunHelp: czas na tajną misję',
-      preheader: 'Dołącz do świątecznej operacji. Zapisy trwają do {TERMIN}.',
+      temat: 'Tu „Święty”. Mam dla ciebie misję',
+      preheader: 'Ta skrzynka jest chwilowo moja. Mikołaj nic nie wie.',
       tresc: [
         'Cześć, {IMIE}!',
-        'W SunHelp rusza świąteczna tajna misja: Mikołajki 2026. Biuro czy praca zdalna, zapraszamy cały zespół. Zapisz się do {TERMIN} służbowym adresem @sunhelp.pl.',
-        'Losowanie ruszy {START}. Każda osoba dostanie wtedy mailem osobisty link. Im wcześniej losujesz, tym większa pula. Siebie nie wylosujesz, a wynik zobaczysz tylko ty.',
-        'Prezent do {BUDZET}, wręczenie w {DATA_WRECZENIA}. Przyda się odrobina pomysłowości i dyskrecji. Ciemne okulary możesz zostawić w szufladzie.',
+        'Mówią na mnie „Święty”. Jestem najlepszym agentem tajnej służby Świętego Mikołaja. Na potrzeby tej operacji przejąłem skrzynkę naszego Mikołaja z marketingu. On nic o tym nie wie i niech tak zostanie. Ani słowa przy kawie.',
+        'Elfy? To przykrywka, sam ją wymyśliłem. Świat wierzy w elfy, a prezenty od lat dostarczają ludzie, których nikt nie podejrzewa.',
+        'W tym roku rekrutuję cały SunHelp, z biura i spod domowego koca. Twoja misja: dostarczyć prezent wskazanej osobie tak, żeby nigdy nie odkryła, od kogo jest.',
+        'Zgłoś się do {TERMIN}, wyłącznie adresem @sunhelp.pl. Losowanie rusza {START}, wtedy wyślę ci osobisty link. Kto wejdzie pierwszy, ma większą pulę. Siebie nie wylosujesz, a wynik zobaczysz tylko ty.',
+        'Budżet: {BUDZET}. Wręczenie: {DATA_WRECZENIA}.',
       ],
-      przycisk: 'Dołącz do misji',
-      dopisek: 'Ta wiadomość ulegnie samozniszczeniu, gdy pierniki nauczą się zacierać ślady.',
+      przycisk: 'Przyjmuję misję',
+      dopisek: 'Jeśli Mikołaj zapyta, czemu ma w „Wysłanych” maile, których nie pisał, mów, że to pewnie elfy.',
     },
     potwierdzenie: {
-      temat: 'Misja przyjęta. Jesteś w grze!',
+      temat: 'Zgłoszenie przyjęte. Witaj w tajnej służbie',
       tresc: [
         'Cześć, {IMIE}!',
-        'Centrala SunHelp potwierdza twoje zgłoszenie na Mikołajki 2026.',
-        'Zapisy zamykamy {TERMIN}, a losowanie ruszy {START}. Wtedy dostaniesz osobisty link i poznasz osobę, dla której przygotujesz prezent w budżecie do {BUDZET}.',
-        'Biuro czy zdalnie — jesteś częścią ekipy. Wypatruj kolejnej transmisji!',
+        'Tu „Święty”. Zgłoszenie przyjęte: masz miejsce w tajnej służbie Mikołaja.',
+        'Zapisy zamykam {TERMIN}, a losowanie rusza {START}. Wtedy wyślę ci osobisty link i poznasz osobę, której przygotujesz prezent do {BUDZET}.',
+        'Do tego czasu zachowuj się naturalnie. I ani słowa Mikołajowi z marketingu.',
       ],
     },
     czasLosowac: {
-      temat: 'Centrala do agenta: czas losować',
-      preheader: 'Twój osobisty link czeka. Odkryj, komu przygotujesz prezent.',
+      temat: 'Zielone światło. Czas losować',
+      preheader: 'Twój osobisty link czeka. Sprawdź, komu dostarczysz prezent.',
       tresc: [
         'Cześć, {IMIE}!',
-        'Rekrutacja zakończona. Centrala daje zielone światło: możesz już wylosować osobę, której sprawisz mikołajkową radość.',
-        'Wylosuj najpóźniej {TERMIN_LOSOWANIA}. Kto wejdzie wcześniej, losuje z większej puli. Siebie nie wylosujesz, a wynik zobaczysz tylko ty.',
-        'Nie przekazuj nikomu linku — to także klucz do ponownego podglądu wyniku.',
+        'Tu „Święty”. Zapisy zamknięte, drużyna skompletowana. Daję zielone światło: możesz wylosować osobę, której dostarczysz prezent.',
+        'Losuj najpóźniej {TERMIN_LOSOWANIA}. Kto wejdzie pierwszy, ma większą pulę. Siebie nie wylosujesz, a wynik zobaczysz tylko ty.',
+        'Link jest tylko twój i otwiera też twoje dossier. Nie przekazuj go dalej, nawet elfom.',
       ],
       przycisk: 'Przyjmuję misję',
-      dopisek: 'Ta wiadomość ulegnie samozniszczeniu… wyłącznie w filmowej wyobraźni. W skrzynce może spokojnie zostać.',
+      dopisek: 'Ta wiadomość nie ulegnie samozniszczeniu. Może spokojnie zostać w skrzynce.',
     },
     przypomnienie: {
-      temat: 'Agencie, lont się pali — zostały 24 godziny',
+      temat: 'Lont się pali. Zostały 24 godziny',
       tresc: [
         'Cześć, {IMIE}!',
-        'Twoja misja wciąż czeka na losowanie. Masz czas do {TERMIN_LOSOWANIA}. Potem centrala przydzieli cel automatycznie.',
+        'Tu „Święty”. Twoja misja wciąż czeka na losowanie. Masz czas do {TERMIN_LOSOWANIA}. Potem sam przydzielę ci cel.',
       ],
       przycisk: 'Losuję teraz',
     },
     nowyLink: {
-      temat: 'Nowa przepustka do misji',
-      tresc: ['Cześć, {IMIE}!', 'Oto twój osobisty link do misji. Nie przekazuj go nikomu.'],
+      temat: 'Twoja przepustka do misji',
+      tresc: ['Cześć, {IMIE}!', 'Tu „Święty”. Oto twój osobisty link do misji. Nie przekazuj go nikomu.'],
       przycisk: 'Otwórz misję',
     },
     depesza: {
       temat: 'Tajna depesza: twój cel misji',
       tresc: [
         'Cześć, {IMIE}!',
-        'Dossier zostało odtajnione. Twój cel misji: <b>{CEL}</b>.',
-        'Przygotuj prezent w budżecie do {BUDZET}. Przekazanie: {DATA_WRECZENIA}. Zachowaj tajemnicę.',
+        'Tu „Święty”. Dossier odtajnione. Twój cel: <b>{CEL}</b>.',
+        'Przygotuj prezent do {BUDZET}. Przekazanie: {DATA_WRECZENIA}. Niech ta osoba poczuje radość, ale nigdy nie pozna twojej tożsamości.',
       ],
-      auto: 'Termin losowania minął, więc centrala przydzieliła ci cel automatycznie.',
+      auto: 'Termin losowania minął, więc przydzieliłem ci cel osobiście.',
       przycisk: 'Otwórz dossier',
     },
   },

@@ -49,7 +49,7 @@ async function api(path, body) {
 
 // ── polszczyzna: daty i liczebniki ──
 const TZ = { timeZone: 'Europe/Warsaw' };
-const fmtDT = (iso) => NB(new Date(iso).toLocaleString('pl-PL', { ...TZ, day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }));
+const fmtDT = (iso) => NB(`${new Date(iso).toLocaleDateString('pl-PL', { ...TZ, day: 'numeric', month: 'long' })} o ${new Date(iso).toLocaleTimeString('pl-PL', { ...TZ, hour: 'numeric', minute: '2-digit' })}`);
 const NB = (t) => String(t).replace(/(\d) (?=\S)/g, '$1\u00a0'); // liczba nie odrywa się od słowa
 const fmtDay = (iso) => NB(new Date(iso).toLocaleDateString('pl-PL', { ...TZ, day: 'numeric', month: 'long' }));
 const fmtD = (iso) => new Date(iso).toLocaleDateString('pl-PL', { ...TZ, weekday: 'long', day: 'numeric', month: 'long' });
