@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Operacja: Tajny Mikołaj · SunHelp</title>
+  <meta name="description" content="Mikołajki 2026 w SunHelp — tajna świąteczna misja.">
+  <meta name="theme-color" content="#040908">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/sign-square-white.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="fonts/Sterling-Book.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="dark" aria-hidden="true"></div>
+  <div class="lights" id="lights" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="brand" href="./" aria-label="SunHelp — start"><img src="assets/logo-full-white.svg" alt="SunHelp"></a>
+    <button class="sound" id="sound" type="button" aria-pressed="false">Dźwięk: <span>wył.</span></button>
+  </header>
+
+  <main id="app" aria-live="polite"></main>
+
+  <footer class="foot" id="foot"></footer>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card"></div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
