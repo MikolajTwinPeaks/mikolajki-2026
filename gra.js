@@ -43,6 +43,19 @@ const TXT = {
     'Meldunek ze sztabu: {KTO} ma {PKT} pkt więcej. Twoje prowadzenie trwało {CZAS}. Odbij je.',
   ],
   dethronedBtn: 'Odbijam prowadzenie',
+  podiumIn: [
+    'Wskakujesz na podium: miejsce {MIEJSCE}. Złote Sanie widać już gołym okiem.',
+    'Miejsce {MIEJSCE} na tablicy. Do prowadzenia brakuje {PKT} pkt.',
+    'Dziad dopisuje cię do listy podejrzanych: miejsce {MIEJSCE} i coraz bliżej szczytu.',
+    'Podium zdobyte, miejsce {MIEJSCE}. Lider ma przewagę {PKT} pkt i już ogląda się za siebie.',
+  ],
+  podiumOut: [
+    '{KTO} wypycha cię z podium. Jeszcze niedawno miejsce {MIEJSCE}, teraz trzeba gonić.',
+    'Meldunek z tablicy: tracisz miejsce na podium. Na twoje miejsce wchodzi {KTO}.',
+    'Dziad się cieszy: {KTO} spycha cię poza pierwszą trójkę. Podium czeka na powrót.',
+    'Zmiana na podium: {KTO} jest wyżej, a ty poza trójką. Sanie są zatankowane.',
+  ],
+  podiumBtn: 'Wracam na podium',
 };
 // „2 godziny i 14 minut”, „1 dzień i 3 godziny”, „niecałą minutę” (biernik, pasuje do „przez”, „trwało”, „już”).
 function plural(n, one, few, many) { const d = n % 10, dd = n % 100; return n === 1 ? one : d >= 2 && d <= 4 && (dd < 12 || dd > 14) ? few : many; }
@@ -55,7 +68,7 @@ function dur(ms) {
   const bits = d ? [part(d, D), h && part(h, Hh)] : h ? [part(h, Hh), mm && part(mm, M)] : [part(mm, M)];
   return bits.filter(Boolean).join(' i ').replace(/^dzień/, '1 dzień');
 }
-const fill = (t, v) => t.replace('{KTO}', `<b>${esc(v.kto || '')}</b>`).replace('{CZAS}', v.czas || '').replace('{PKT}', fmt(v.pkt || 0));
+const fill = (t, v) => t.replace('{KTO}', `<b>${esc(v.kto || '')}</b>`).replace('{CZAS}', v.czas || '').replace('{PKT}', fmt(v.pkt || 0)).replace('{MIEJSCE}', v.miejsce || '');
 const RANKS = [[0, 'Nasłuch'], [500, 'Zwiad'], [2000, 'Patrol Sań'], [6000, 'Sekcja Specjalna'], [15000, 'Sztab Świętego'], [30000, 'Naczelne Dowództwo']];
 const rankOf = (sc) => RANKS.filter(([t]) => sc >= t).at(-1)[1];
 
@@ -146,6 +159,7 @@ async function newSession() {
     const s = await call('game_start', { t: token });
     ME = { first: s.first, name: s.name, best: s.best };
     if (s.news) NEWS = s.news;
+    else if (s.podium) NEWS = { podium: true, ...s.podium };
     LEAD = s.lead || null;
     OPEN = s.open !== false;
     LOCK = null;
@@ -670,9 +684,10 @@ function startScreen() {
   const best = ME && ME.best ? `<p class="small">Twój rekord: ${fmt(ME.best)} pkt, stopień: ${esc(rankOf(ME.best))}.</p>` : '';
   if (NEWS) {
     const n = NEWS; NEWS = null;
-    showOverlay(`<div class="rank">Pilny meldunek</div><h1>Prowadzenie przejęte</h1>
-      <p>${fill(pick(TXT.dethroned), { kto: n.by, czas: dur(n.held), pkt: n.gap })}</p>${best}
-      <button class="btn" id="go" type="button">${TXT.dethronedBtn} <span class="arr" aria-hidden="true">→</span></button>`);
+    const msg = n.podium ? fill(pick(TXT.podiumOut), { kto: n.by, miejsce: n.was }) : fill(pick(TXT.dethroned), { kto: n.by, czas: dur(n.held), pkt: n.gap });
+    showOverlay(`<div class="rank">Pilny meldunek</div><h1>${n.podium ? 'Poza podium' : 'Prowadzenie przejęte'}</h1>
+      <p>${msg}</p>${best}
+      <button class="btn" id="go" type="button">${n.podium ? TXT.podiumBtn : TXT.dethronedBtn} <span class="arr" aria-hidden="true">→</span></button>`);
     $('#go').onclick = () => { hideOverlay(); newGame(); };
     return;
   }
@@ -716,6 +731,10 @@ async function gameOver() {
       if (msg) out.insertAdjacentHTML('beforebegin', `<div class="rank">${L.fresh ? 'Nowy lider tablicy' : 'Lider tablicy'}</div><p class="lead">${msg}</p>`);
       LEAD = { since: L.fresh ? Date.now() : L.since, gap: L.gap };
       if (L.fresh) blip(880, 0.12, 'triangle', 0.06, 440);
+    } else if (r.podium) {
+      out.insertAdjacentHTML('beforebegin', `<div class="rank">Podium</div><p class="lead">${fill(pick(TXT.podiumIn), { miejsce: r.podium.place, pkt: r.podium.gap })}</p>`);
+      blip(660, 0.1, 'triangle', 0.05, 220);
+      LEAD = null;
     } else if (LEAD && r.place > 1) LEAD = null;
     renderBoard({ ...lastTop, top: r.top, players: r.players, leader: r.leader, open: true });
   } catch (e) {

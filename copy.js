@@ -193,6 +193,20 @@ export const COPY = {
       przycisk: 'Wsiadam do sań',
       dopisek: 'U nas nawet panel fotowoltaiczny ma przydział do sań.',
     },
+    lider: {
+      // 24.11: jednorazowy mail do lidera tablicy wyników gry (mailDoLidera).
+      temat: 'Mikołajki: prowadzisz w „Śnieżka kontra Dziad”',
+      preheader: 'Pierwsze miejsce na tablicy. Pościg już ruszył.',
+      tresc: [
+        'Cześć, {IMIE}!',
+        'Tu „Święty”. Melduję oficjalnie: prowadzisz na tablicy wyników gry „Śnieżka kontra Dziad”. {WYNIK} pkt i pierwsze miejsce wśród {GRACZY} agentów, którzy już rozbijają magazyny Dziada.',
+        'Pościg jest blisko. {DRUGI} traci do ciebie tylko {PRZEWAGA} pkt, a za plecami ustawia się kolejka chętnych na Złote Sanie.',
+        'Tablicę zamykam {GRA_KONIEC}. Kto wtedy będzie na szczycie, przy wręczaniu prezentów odbierze tytuł „Złote Sanie Świętego”.',
+        'Jeśli ktoś cię wyprzedzi, dam znać w grze. Lepiej jednak nie czekać na taki meldunek.',
+      ],
+      przycisk: 'Bronię prowadzenia',
+      dopisek: 'Dziad twierdzi, że jego kozie skarpety też stały na podium. Nie stały.',
+    },
     depesza: {
       temat: 'Tajna depesza: twój cel misji',
       tresc: [
