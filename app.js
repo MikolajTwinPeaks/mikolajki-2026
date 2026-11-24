@@ -590,7 +590,10 @@ function screenSealed(m, token, text, title) {
       <div class="transmission">wiadomość dla: ${esc(m.agent.first.toLowerCase())}</div>
       <h1>${title}</h1>
       <p class="prose">${esc(text)}</p>
-      <div><button class="btn" id="open">${COPY.wynik.pokaz} <span class="arr" aria-hidden="true">→</span></button></div>
+      <div class="sealed-actions" style="display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center">
+        <button class="btn" id="open">${COPY.wynik.pokaz} <span class="arr" aria-hidden="true">→</span></button>
+        <a class="btn quiet" href="gra.html#misja=${encodeURIComponent(token)}">Zagraj: Śnieżka kontra Dziad</a>
+      </div>
     </div>`, { dark: true });
   $('#open', s).onclick = () => screenResult(m, token);
 }
@@ -680,6 +683,8 @@ function screenError(code) {
 
 // ═════════════════════════ ROUTER ═════════════════════════
 async function refresh() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.has('gra')) return location.replace(`gra.html${h.get('gra') ? `#misja=${encodeURIComponent(h.get('gra'))}` : ''}`);
   try {
     const st = await api('/api/state');
     STATE = st; clockOffset = Date.parse(st.serverTime) - Date.now();
@@ -695,6 +700,7 @@ async function refresh() {
 $('#foot').textContent = COPY.stopka;
 addEventListener('hashchange', refresh);
 (async () => {
+  if (new URLSearchParams(location.hash.slice(1)).has('gra')) return refresh(); // link do gry: bez intra
   await gate();
   await Promise.all([boot(), api('/api/state').then((s) => { STATE = s; }).catch(() => {})]);
   refresh();

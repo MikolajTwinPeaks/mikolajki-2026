@@ -144,6 +144,7 @@ export const COPY = {
       tresc: [
         'Cześć, {IMIE}!',
         'Tu „Święty”. Twoja misja wciąż czeka na losowanie. Masz czas do {TERMIN_LOSOWANIA}. Potem sam przydzielę ci cel.',
+        'Kto wylosuje, dostaje też dostęp do gry „Śnieżka kontra Dziad” z tablicą wyników. Reszta agentów już rozbija magazyny Dziada.',
       ],
       przycisk: 'Losuję teraz',
     },
@@ -152,12 +153,53 @@ export const COPY = {
       tresc: ['Cześć, {IMIE}!', 'Tu „Święty”. Oto twój osobisty link do misji. Nie przekazuj go nikomu.'],
       przycisk: 'Otwórz misję',
     },
+    wyposazenie: {
+      temat: 'Wyposażenie agenta. Elfom wstęp wzbroniony',
+      preheader: 'W załącznikach twoja odznaka i świąteczny kamuflaż.',
+      tresc: [
+        'Cześć, {IMIE}!',
+        'Tu „Święty”. Każdy agent dostaje wyposażenie, więc w załącznikach masz dwie tapety.',
+        '<b>Na telefon:</b> metalowa odznaka z twoim imieniem i nazwiskiem. To twoja legitymacja tajnej służby. Noś ją przy sobie, ale nie pokazuj elfom, bo zaraz wciągną cię na nocną zmianę przy pakowaniu.',
+        '<b>Na komputer:</b> kamuflaż. Nocna wioska, panele na dachach, światło w oknach i choinka. „Niech w święta nikt się nie spieszy” to także moje życzenie dla ciebie.',
+        '<b>Jak ustawić:</b> na telefonie zapisz obraz i wybierz go w ustawieniach tapety. Na komputerze zapisz plik, kliknij go prawym przyciskiem i ustaw jako tło pulpitu.',
+        'Losowanie rusza {START}. Wtedy podeślę ci osobisty link.',
+      ],
+      dopisek: 'Jeśli elf spojrzy ci przez ramię, powiedz, że to prognoza pogody.',
+    },
+    dogrywka: {
+      // 23.11: dogrywka zapisów dla niezapisanych. Wersje: _gpt/niezapisani2-gpt.txt (ChatGPT), redakcja Claude.
+      temat: 'Mikołajki: ostatnia szansa, żeby się zapisać',
+      preheader: 'Dziad wybrał ci już prezent. Zapisy otwarte jeszcze {TERMIN}.',
+      tresc: [
+        'Cześć, {IMIE}!',
+        'Tu „Święty”. Moi ludzie przechwycili list zaadresowany do ciebie. Nadawca: konkurencja ze Wschodu.',
+        '<i>„{IMIE}, skoro nie zgłosisz się do «Świętego», trafisz do mojej kartoteki niegrzecznych dzieci. Prezent przyniosę osobiście: skarpety z koziej wełny, które drapią nawet przez kapcie, kaszankę w sreberku i kalendarz z zeszłego roku. Śnieżynka już wiąże kokardę.<br>Dziad”</i>',
+        'Mogę cię jeszcze odbić. Drużyna jest prawie w komplecie, ale dla ciebie jest miejsce. Zapisy są otwarte jeszcze {TERMIN}. Zgłoś się adresem, na który przyszła ta wiadomość. Dostaniesz imienną odznakę agenta, świąteczne tapety i osobę, dla której przygotujesz prezent do {BUDZET}. Wręczenie: {DATA_WRECZENIA}. Obecność obowiązkowa, sprawdzam listę.',
+      ],
+      przycisk: 'Wybieram „Świętego”',
+      dopisek: 'Kaszanki w sreberku nie podłączaj do falownika, choćby Śnieżynka zapewniała, że to nowy magazyn energii.',
+    },
+    gra: {
+      // 24.11: zapowiedź gry dla agentów po losowaniu. Wersja: _gpt/gra-gpt.txt (ChatGPT), redakcja Claude.
+      temat: 'Mikołajki: Dziad ma pełne magazyny',
+      preheader: 'Twój przydział sań. Tablicę wyników zamykam {GRA_KONIEC}.',
+      tresc: [
+        'Cześć, {IMIE}!',
+        'Tu „Święty”. Cel masz wylosowany, więc dostajesz przydział do kolejnej operacji. Dziad właśnie zapełnił magazyny: kozie skarpety, mrożona rzepa, stosy zeszłorocznych kalendarzy. Trzeba je rozbić, zanim trafią pod czyjąś choinkę.',
+        'W grze „Śnieżka kontra Dziad” sterujesz saniami, odbijasz śnieżkę i rozbijasz paczki. Każdy kolejny magazyn to szybsza akcja i inna kolęda w tle. Grać możesz na komputerze (strzałki i spacja) albo na telefonie.',
+        'Liczy się twój najlepszy wynik. Tablicę zamykam {GRA_KONIEC}, a przy wręczaniu prezentów najlepszy agent dostanie tytuł „Złote Sanie Świętego”.',
+        'Link jest tylko twój, bo pod nim zapisuję twoje wyniki. Nie przekazuj go dalej.',
+      ],
+      przycisk: 'Wsiadam do sań',
+      dopisek: 'U nas nawet panel fotowoltaiczny ma przydział do sań.',
+    },
     depesza: {
       temat: 'Tajna depesza: twój cel misji',
       tresc: [
         'Cześć, {IMIE}!',
         'Tu „Święty”. Dossier odtajnione. Twój cel: <b>{CEL}</b>.',
         'Przygotuj prezent do {BUDZET}. Przekazanie: {DATA_WRECZENIA}. Niech ta osoba poczuje radość, ale nigdy nie pozna twojej tożsamości.',
+        'Za wykonane losowanie przysługuje ci przydział sań. Dziad zapełnił magazyny paskudnymi paczkami, a ty możesz je rozbić w grze <a href="{LINK_GRA}" style="color:#FF6A39">„Śnieżka kontra Dziad”</a>. Najlepszy wynik do 7 grudnia dostaje tytuł „Złote Sanie Świętego”.',
       ],
       auto: 'Termin losowania minął, więc przydzieliłem ci cel osobiście.',
       przycisk: 'Otwórz dossier',

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Śnieżka kontra Dziad · SunHelp</title>
+  <meta name="theme-color" content="#040908">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/sign-square-white.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="gra.css">
+  <script src="config.js"></script>
+</head>
+<body class="gra">
+  <header class="g-top">
+    <a class="brand" id="back" href="./" aria-label="Wróć do misji"><img src="assets/logo-full-white.svg" alt="SunHelp"></a>
+    <div class="g-title">Śnieżka kontra Dziad</div>
+    <button class="g-sound" id="music" type="button" aria-pressed="true">Muzyka: <span>wł.</span></button>
+    <button class="g-sound" id="sound" type="button" aria-pressed="true">Efekty: <span>wł.</span></button>
+  </header>
+
+  <main class="g-main">
+    <section class="g-stage" aria-label="Gra">
+      <div class="g-frame" id="frame">
+        <canvas id="game" width="600" height="800" aria-label="Plansza gry"></canvas>
+        <div class="g-over" id="over"></div>
+      </div>
+      <p class="g-guest" id="guest" hidden></p>
+    </section>
+
+    <aside class="g-side">
+      <h2>Tablica wyników Świętego</h2>
+      <p class="g-note" id="note"></p>
+      <ol class="g-board" id="board"><li class="g-empty">Łączę z centralą…</li></ol>
+      <details class="g-legend">
+        <summary>Paczki Dziada i wzmocnienia</summary>
+        <div id="legend"></div>
+      </details>
+    </aside>
+  </main>
+
+  <script type="module" src="gra.js"></script>
+</body>
+</html>
