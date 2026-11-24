@@ -44,3 +44,5 @@ body.gra { overflow-x: hidden; min-height: 100dvh; background: radial-gradient(e
 .g-sound { white-space: nowrap; }
 .g-top .g-sound + .g-sound { margin-left: -4px; }
 @media (max-width: 560px) { .g-title { display: none; } .g-top { justify-content: space-between; } }
+.g-over .lead { color: var(--cream); border-left: 2px solid var(--orange); padding: 2px 0 2px 12px; text-align: left; }
+.g-over .lead b { font-weight: 500; color: var(--orange); }

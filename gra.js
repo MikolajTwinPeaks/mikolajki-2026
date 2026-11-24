@@ -14,7 +14,48 @@ const TXT = {
   over: { h: 'Koniec akcji', btn: 'Jeszcze raz' },
   record: 'Nowy rekord! Święty wpisuje go do akt.',
   title: 'Złote Sanie Świętego',
+  // Meldunki o prowadzeniu. {KTO} = imię i inicjał, {CZAS} = „2 godziny i 14 minut”, {PKT} = przewaga w punktach.
+  leadFirst: [
+    'Otwierasz tablicę wyników. Na razie Złote Sanie stoją przed twoim biurkiem.',
+    'Pierwszy wynik w aktach i od razu pierwsze miejsce. Dziad już szuka okularów, żeby to przeczytać.',
+  ],
+  leadNew: [
+    'Przejmujesz prowadzenie. {KTO} po {CZAS} na szczycie ogląda teraz twoje płozy.',
+    'Złote Sanie zmieniają garaż. Poprzednie prowadzenie trwało {CZAS}, a teraz {KTO} goni ciebie.',
+    'Zmiana warty na szczycie: {KTO} schodzi z pierwszego miejsca po {CZAS}. Prowadzisz ty.',
+    'Dziad nie nadąża z notatkami. {KTO}: {CZAS} na czele, a od teraz pościg za tobą.',
+    'Meldunek do sztabu: nowy lider tablicy. {KTO} oddaje pierwsze miejsce po {CZAS}.',
+  ],
+  leadNewNoPrev: [
+    'Przejmujesz prowadzenie. Złote Sanie stoją teraz pod twoim biurkiem.',
+  ],
+  leadKeep: [
+    'Wciąż na czele. Prowadzisz już {CZAS}, a przewaga nad drugim miejscem to {PKT} pkt.',
+    'Pierwsze miejsce od {CZAS} w tych samych rękach. Drugie miejsce traci {PKT} pkt.',
+    'Dziad liczy dni do twojego potknięcia. Na razie liczy już {CZAS}. Przewaga: {PKT} pkt.',
+  ],
+  leadKeepAlone: ['Prowadzisz już {CZAS}. Na razie nikt nawet nie próbuje.'],
+  dethroned: [
+    'Złe wieści z centrali. Prowadzenie przejmuje {KTO}. Twoje panowanie na szczycie trwało {CZAS}.',
+    'Twoje Złote Sanie stoją teraz w innym garażu. Na czele: {KTO}, o {PKT} pkt przed tobą. Twoje prowadzenie trwało {CZAS}.',
+    'Po {CZAS} na szczycie oddajesz pierwsze miejsce. Teraz prowadzi {KTO}. Dziad zaciera ręce.',
+    'Zmiana warty: {KTO} spycha cię z pierwszego miejsca. {CZAS} prowadzenia to dobry wynik, ale sanie czekają na rewanż.',
+    'Meldunek ze sztabu: {KTO} ma {PKT} pkt więcej. Twoje prowadzenie trwało {CZAS}. Odbij je.',
+  ],
+  dethronedBtn: 'Odbijam prowadzenie',
 };
+// „2 godziny i 14 minut”, „1 dzień i 3 godziny”, „niecałą minutę” (biernik, pasuje do „przez”, „trwało”, „już”).
+function plural(n, one, few, many) { const d = n % 10, dd = n % 100; return n === 1 ? one : d >= 2 && d <= 4 && (dd < 12 || dd > 14) ? few : many; }
+function dur(ms) {
+  const m = Math.floor(ms / 60000);
+  if (m < 1) return 'niecałą minutę';
+  const d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), mm = m % 60;
+  const part = (n, w) => (n === 1 ? w[0] : `${n} ${plural(n, ...w)}`);
+  const D = ['dzień', 'dni', 'dni'], Hh = ['godzinę', 'godziny', 'godzin'], M = ['minutę', 'minuty', 'minut'];
+  const bits = d ? [part(d, D), h && part(h, Hh)] : h ? [part(h, Hh), mm && part(mm, M)] : [part(mm, M)];
+  return bits.filter(Boolean).join(' i ').replace(/^dzień/, '1 dzień');
+}
+const fill = (t, v) => t.replace('{KTO}', `<b>${esc(v.kto || '')}</b>`).replace('{CZAS}', v.czas || '').replace('{PKT}', fmt(v.pkt || 0));
 const RANKS = [[0, 'Nasłuch'], [500, 'Zwiad'], [2000, 'Patrol Sań'], [6000, 'Sekcja Specjalna'], [15000, 'Sztab Świętego'], [30000, 'Naczelne Dowództwo']];
 const rankOf = (sc) => RANKS.filter(([t]) => sc >= t).at(-1)[1];
 
@@ -83,6 +124,8 @@ async function call(a, body) {
 let ME = null;          // { first, name, best }
 let OPEN = true;
 let lastTop = null;
+let NEWS = null;        // meldunek: ktoś zabrał ci prowadzenie (pokazywany raz)
+let LEAD = null;        // prowadzisz: { since, gap }
 function renderBoard(top) {
   lastTop = top;
   OPEN = top.open !== false;
@@ -92,7 +135,7 @@ function renderBoard(top) {
   const d = new Date(top.deadline);
   const when = `${d.toLocaleDateString('pl-PL', { timeZone: 'Europe/Warsaw', weekday: 'long', day: 'numeric', month: 'long' })} o ${d.toLocaleTimeString('pl-PL', { timeZone: 'Europe/Warsaw', hour: 'numeric', minute: '2-digit' })}`;
   $('#note').textContent = OPEN
-    ? `Tablicę zamykam w ${when}. Najlepszy wynik dostaje tytuł „${TXT.title}”. ${top.players ? `Wyników na tablicy: ${top.players}.` : ''}`
+    ? `Tablicę zamykam w ${when}. Najlepszy wynik dostaje tytuł „${TXT.title}”. ${top.players ? `Wyników na tablicy: ${top.players}.` : ''}${top.leader ? ` Prowadzi ${top.leader.name}, już ${dur(Date.now() - top.leader.since)}.` : ''}`
     : `Tablica zamknięta. Tytuł „${TXT.title}” trafia do: ${top.top[0] ? top.top[0].name : 'nikogo'}.`;
 }
 async function loadBoard() { try { renderBoard(await call('top')); } catch { $('#board').innerHTML = '<li class="g-empty">Brak łączności z centralą. Spróbuj odświeżyć stronę.</li>'; } }
@@ -102,6 +145,8 @@ async function newSession() {
   try {
     const s = await call('game_start', { t: token });
     ME = { first: s.first, name: s.name, best: s.best };
+    if (s.news) NEWS = s.news;
+    LEAD = s.lead || null;
     OPEN = s.open !== false;
     LOCK = null;
     return s.sid;
@@ -623,7 +668,16 @@ function lockedScreen() {
 function startScreen() {
   if (LOCK) return lockedScreen();
   const best = ME && ME.best ? `<p class="small">Twój rekord: ${fmt(ME.best)} pkt, stopień: ${esc(rankOf(ME.best))}.</p>` : '';
-  showOverlay(`<div class="rank">Operacja: Tajny Mikołaj</div><h1>${TXT.start.h}</h1><p>${TXT.start.p}</p>${best}
+  if (NEWS) {
+    const n = NEWS; NEWS = null;
+    showOverlay(`<div class="rank">Pilny meldunek</div><h1>Prowadzenie przejęte</h1>
+      <p>${fill(pick(TXT.dethroned), { kto: n.by, czas: dur(n.held), pkt: n.gap })}</p>${best}
+      <button class="btn" id="go" type="button">${TXT.dethronedBtn} <span class="arr" aria-hidden="true">→</span></button>`);
+    $('#go').onclick = () => { hideOverlay(); newGame(); };
+    return;
+  }
+  const lead = LEAD ? `<p class="lead">${fill(pick(LEAD.gap == null ? TXT.leadKeepAlone : TXT.leadKeep), { czas: dur(Date.now() - LEAD.since), pkt: LEAD.gap })}</p>` : '';
+  showOverlay(`<div class="rank">${LEAD ? `Lider tablicy · ${esc(TXT.title)}` : 'Operacja: Tajny Mikołaj'}</div><h1>${TXT.start.h}</h1><p>${TXT.start.p}</p>${lead}${best}
     <button class="btn" id="go" type="button">${TXT.start.btn} <span class="arr" aria-hidden="true">→</span></button>
     <div class="kbd">P albo Esc: pauza</div>`);
   $('#go').onclick = () => { hideOverlay(); newGame(); };
@@ -654,7 +708,16 @@ async function gameOver() {
     const r = await call('game_score', { t: token, sid, score, level });
     if (ME) ME.best = r.best;
     out.innerHTML = `${r.record ? `<b style="color:var(--orange)">${TXT.record}</b><br>` : ''}Miejsce na tablicy: ${r.place} z ${r.players}. Twój rekord: ${fmt(r.best)} pkt.`;
-    renderBoard({ ...lastTop, top: r.top, players: r.players, open: true });
+    const L = r.lead;
+    if (L) {
+      let msg;
+      if (L.fresh) msg = L.prev ? fill(pick(TXT.leadNew), { kto: L.prev.name, czas: dur(L.prev.held) }) : fill(pick(r.players > 1 ? TXT.leadNewNoPrev : TXT.leadFirst), {});
+      else if (L.record) msg = fill(pick(L.gap == null ? TXT.leadKeepAlone : TXT.leadKeep), { czas: dur(Date.now() - L.since), pkt: L.gap });
+      if (msg) out.insertAdjacentHTML('beforebegin', `<div class="rank">${L.fresh ? 'Nowy lider tablicy' : 'Lider tablicy'}</div><p class="lead">${msg}</p>`);
+      LEAD = { since: L.fresh ? Date.now() : L.since, gap: L.gap };
+      if (L.fresh) blip(880, 0.12, 'triangle', 0.06, 440);
+    } else if (LEAD && r.place > 1) LEAD = null;
+    renderBoard({ ...lastTop, top: r.top, players: r.players, leader: r.leader, open: true });
   } catch (e) {
     out.textContent = e.code === 'koniec' ? 'Tablica jest już zamknięta. Wynik zostaje tylko u ciebie.' : 'Nie udało się zapisać wyniku. Spróbuj jeszcze raz w kolejnej grze.';
   }
