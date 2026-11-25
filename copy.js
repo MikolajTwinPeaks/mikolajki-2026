@@ -193,6 +193,22 @@ export const COPY = {
       przycisk: 'Wsiadam do sań',
       dopisek: 'U nas nawet panel fotowoltaiczny ma przydział do sań.',
     },
+    swetry: {
+      // 25.11: tekst Ewy Kowalskiej (HR) z jej odpowiedzi na prośbę o akceptację, drobna korekta językowa + przypomnienie o grze.
+      temat: '7 grudnia zakładamy świąteczne sweterki!',
+      preheader: 'Mikołaj patrzy. Mikołaj ocenia. Mikołaj pamięta.',
+      tresc: [
+        'Ho, ho, ho! Zbliża się nasze Mikołajkowe Spotkanie, więc czas sprawdzić, kto w tym roku był grzeczny…',
+        '<b>Poniedziałek, 7 grudnia</b>',
+        'Tego dnia wszystkie grzeczne dzieciaki przychodzą do pracy w świątecznych sweterkach!',
+        'A Ty bez sweterka? Cóż… w ten sposób ogłaszasz się niegrzecznym dzieciakiem, a wiadomo, co czeka takich delikwentów…',
+        'Nie masz świątecznego sweterka? Żaden problem! Zrób go własnoręcznie! Doczep łańcuchy, śnieżynki, bombki, gwiazdki, światełka albo wszystko, co znajdziesz pod ręką. Liczy się pomysłowość, rozmach i świąteczne szaleństwo!',
+        '<b>Mikołaj patrzy. Mikołaj ocenia. Mikołaj pamięta.</b>',
+        'Do zobaczenia 7 grudnia!',
+        'PS Tablica wyników w grze <a href="{LINK_GRA}" style="color:#FF6A39">„Śnieżka kontra Dziad”</a> jest otwarta do {GRA_KONIEC}. {LIDER} Tytuł „Złote Sanie Świętego” wręczymy razem z prezentami.',
+      ],
+      przycisk: 'Zagraj w „Śnieżka kontra Dziad”',
+    },
     lider: {
       // 24.11: jednorazowy mail do lidera tablicy wyników gry (mailDoLidera).
       temat: 'Mikołajki: prowadzisz w „Śnieżka kontra Dziad”',
@@ -200,7 +216,7 @@ export const COPY = {
       tresc: [
         'Cześć, {IMIE}!',
         'Tu „Święty”. Melduję oficjalnie: prowadzisz na tablicy wyników gry „Śnieżka kontra Dziad”. {WYNIK} pkt i pierwsze miejsce wśród {GRACZY} agentów, którzy już rozbijają magazyny Dziada.',
-        'Pościg jest blisko. {DRUGI} traci do ciebie tylko {PRZEWAGA} pkt, a za plecami ustawia się kolejka chętnych na Złote Sanie.',
+        '{POSCIG}',
         'Tablicę zamykam {GRA_KONIEC}. Kto wtedy będzie na szczycie, przy wręczaniu prezentów odbierze tytuł „Złote Sanie Świętego”.',
         'Jeśli ktoś cię wyprzedzi, dam znać w grze. Lepiej jednak nie czekać na taki meldunek.',
       ],
