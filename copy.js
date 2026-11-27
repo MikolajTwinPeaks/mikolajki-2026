@@ -193,6 +193,20 @@ export const COPY = {
       przycisk: 'Wsiadam do sań',
       dopisek: 'U nas nawet panel fotowoltaiczny ma przydział do sań.',
     },
+    gosc: {
+      // 27.11: zaproszenie gościa (gra bez udziału w losowaniu par).
+      temat: 'Mikołajki: przydział specjalny do sań',
+      preheader: 'Losowanie szkoleniowe, gra na serio. Tablicę wyników zamykam {GRA_KONIEC}.',
+      tresc: [
+        'Cześć, {IMIE}!',
+        'Tu „Święty”. Agenci SunHelp mają już wylosowane cele i przygotowują prezenty. Ty dostajesz przydział specjalny: w losowaniu nie bierzesz udziału, ale na froncie walki z Dziadem przydasz się jak mało kto.',
+        'Pod przyciskiem czeka twoja misja. Najpierw przejdziesz losowanie szkoleniowe: ruletka zatrzyma się na celu ćwiczebnym, nikogo nie zabierzesz z puli i nie kupujesz prezentu. Potem wsiadasz do sań.',
+        'W grze „Śnieżka kontra Dziad” sterujesz saniami, odbijasz śnieżkę i rozbijasz paczki z magazynów Dziada. Tu wszystko jest naprawdę: twój wynik trafia na tę samą tablicę co wyniki agentów. Tablicę zamykam {GRA_KONIEC}, a najlepszy agent dostanie tytuł „Złote Sanie Świętego”.',
+        'Link jest tylko twój, bo pod nim zapisuję twoje wyniki. Nie przekazuj go dalej.',
+      ],
+      przycisk: 'Zaczynam misję',
+      dopisek: 'Cel ćwiczebny nie obrazi się, jeśli nic od ciebie nie dostanie.',
+    },
     swetry: {
       // 25.11: tekst Ewy Kowalskiej (HR) z jej odpowiedzi na prośbę o akceptację, drobna korekta językowa + przypomnienie o grze.
       temat: '7 grudnia zakładamy świąteczne sweterki!',

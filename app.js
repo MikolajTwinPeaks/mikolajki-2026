@@ -487,7 +487,7 @@ function resendModal() {
 async function screenMission(token) {
   let m;
   try { m = await api('/api/mission', { t: token }); } catch (ex) { return screenError(ex.code === 'limit' ? 'limit' : 'link'); }
-  if (m.drawn) return screenSealed(m, token, COPY.wynik.juzLosowales, 'Dossier zapieczętowane.');
+  if (m.drawn) return screenSealed(m, token, m.guest ? 'Szkolenie zaliczone. Teraz liczy się tylko gra: rozbijaj magazyny Dziada i walcz o Złote Sanie Świętego.' : COPY.wynik.juzLosowales, 'Dossier zapieczętowane.');
   if (m.phase !== 'draw') return screenWaiting(m.phase);
   const c = COPY.losowanie;
   const pool = `${m.pool} ${plural(m.pool, 'osoba', 'osoby', 'osób')}`;
@@ -495,7 +495,9 @@ async function screenMission(token) {
     <div class="mission seq">
       <div class="transmission">wiadomość dla: ${esc(m.agent.first.toLowerCase())}</div>
       <h1>${esc(m.agent.first)},<br>${c.naglowek.toLowerCase()}.</h1>
-      <p class="prose">W puli jest teraz <span class="num">${pool}</span>. Losowanie zamykamy <span class="num">${esc(fmtDT(STATE.drawDeadline))}</span>. Im wcześniej losujesz, tym większy wybór. Siebie nie trafisz, a wynik zobaczysz tylko ty.</p>
+      <p class="prose">${m.guest
+        ? 'To losowanie szkoleniowe. Ruletka zatrzyma się na celu ćwiczebnym, nikogo nie zabierzesz z puli i nie kupujesz prezentu. Zaraz potem odblokujesz grę, a tam wszystko dzieje się naprawdę.'
+        : `W puli jest teraz <span class="num">${pool}</span>. Losowanie zamykamy <span class="num">${esc(fmtDT(STATE.drawDeadline))}</span>. Im wcześniej losujesz, tym większy wybór. Siebie nie trafisz, a wynik zobaczysz tylko ty.`}</p>
       <div class="hold-wrap">
         <button class="hold" id="hold" type="button" aria-label="${c.przycisk} — przytrzymaj">
           <svg viewBox="0 0 200 200"><circle class="prog" id="prog" cx="100" cy="100" r="99"/></svg>
@@ -581,7 +583,7 @@ async function runDraw(m, token) {
   th.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, fill: 'forwards' });
   await sleep(550);
   th.remove();
-  screenResult({ ...m, target: r.target, drawn: true }, token);
+  screenResult({ ...m, target: r.target, drawn: true, guest: m.guest || r.guest }, token);
 }
 
 function screenSealed(m, token, text, title) {
@@ -622,14 +624,16 @@ function screenResult(m, token) {
             <div class="d-fields">
               ${row('Nazwisko', esc(t.last.toUpperCase()), 'big')}
               ${row('Imię', esc(t.first.toUpperCase()), 'big')}
-              ${row('Status', 'cel operacji „Tajny Mikołaj”')}
+              ${row('Status', m.guest ? 'cel ćwiczebny, losowanie szkoleniowe' : 'cel operacji „Tajny Mikołaj”')}
               ${row('Znaki szczególne', bar(9))}
               ${row('Ostatnio widziany', bar(6) + ' ' + bar(4))}
             </div>
           </div>
           <div class="d-orders">
             <div class="d-k">Rozkaz</div>
-            <p>Przygotować prezent dla wskazanej osoby. Budżet operacyjny: <b>${esc(NB(STATE.budget))}</b>. Przekazanie: <b>${esc(fmtD(STATE.giftDate))}</b>. Tożsamości celu nie ujawniać nikomu.</p>
+            <p>${m.guest
+              ? 'Cel ćwiczebny. Prezentu nie przygotowujesz. Prawdziwe zadanie czeka w saniach: rozbić magazyny Dziada i zawalczyć o tytuł <b>Złote Sanie Świętego</b>.'
+              : `Przygotować prezent dla wskazanej osoby. Budżet operacyjny: <b>${esc(NB(STATE.budget))}</b>. Przekazanie: <b>${esc(fmtD(STATE.giftDate))}</b>. Tożsamości celu nie ujawniać nikomu.`}</p>
           </div>
           <footer class="d-foot">
             <span>Ta wiadomość ulegnie samozniszczeniu</span>
